@@ -12,16 +12,46 @@ can extend the game with new mechanics later.
 import random
 
 
-def create_map():
-    """Create and return the starting game map as a 2D list of characters."""
-    return [
-        list("########"),
-        list("#P   # #"),
-        list("# ##   #"),
-        list("#  ##  #"),
-        list("#   # E#"),
-        list("########"),
-    ]
+def create_map(width=15, height=9):
+    """Create a randomized map with a guaranteed path from P to E.
+
+    Uses recursive backtracking to carve a maze, then places
+    the player in the top-left open area and the exit in the
+    bottom-right open area.
+
+    Width and height must be odd numbers so the maze grid works properly.
+    """
+    # Ensure odd dimensions for the maze algorithm.
+    if width % 2 == 0:
+        width += 1
+    if height % 2 == 0:
+        height += 1
+
+    # Start with everything as walls.
+    game_map = [["#"] * width for _ in range(height)]
+
+    # Carve passages using recursive backtracking (DFS).
+    def carve(r, c):
+        game_map[r][c] = " "
+        dirs = [(-2, 0), (2, 0), (0, -2), (0, 2)]
+        random.shuffle(dirs)
+        for dr, dc in dirs:
+            nr, nc = r + dr, c + dc
+            if 1 <= nr < height - 1 and 1 <= nc < width - 1 and game_map[nr][nc] == "#":
+                # Knock out the wall between current cell and neighbor.
+                game_map[r + dr // 2][c + dc // 2] = " "
+                carve(nr, nc)
+
+    carve(1, 1)
+
+    # Place player top-left, exit bottom-right.
+    game_map[1][1] = "P"
+
+    # Find the bottom-right-most open cell for the exit.
+    exit_row, exit_col = height - 2, width - 2
+    game_map[exit_row][exit_col] = "E"
+
+    return game_map
 
 
 

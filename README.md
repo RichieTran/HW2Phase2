@@ -25,7 +25,9 @@ python3 grid_escape.py
 - Walls shown with `#`.
 - Player shown with `P`.
 - Exit shown with `E`.
+- Enemies shown with `X`.
 - Movement in four directions.
+- Enemy movement for next round shown with `^`, `<`, `>`, and `v`.
 - Wall collision so the player cannot move through walls.
 - Input validation for invalid commands.
 - Win condition when the player reaches the exit.
@@ -56,3 +58,18 @@ This Phase 1 version is intentionally small so it is easy to grow later. Future 
 
 ## Phase 2
 
+### Enemies
+
+- Enemies are shown with `X` and are placed randomly on empty spaces at the start of the game.
+- Each turn, enemies move to a random adjacent cell (they cannot stay still).
+- Direction arrows (`^`, `v`, `<`, `>`) appear on the map to show where each enemy will move next turn.
+- If the player walks into an enemy, or an enemy moves onto the player, the game is over.
+
+### New functions added
+
+- `place_enemies()` — randomly places enemies on empty cells.
+- `find_enemies()` — returns all enemy positions on the map.
+- `move_enemies()` — moves each enemy to its planned or random adjacent cell.
+- `plan_enemy_moves()` — pre-decides each enemy's next move and places directional arrows.
+- `check_enemy()` — checks if a cell contains an enemy.
+- `clear_markers()` — removes direction arrows from the map before enemies move.
