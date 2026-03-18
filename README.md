@@ -51,3 +51,8 @@ This Phase 1 version is intentionally small so it is easy to grow later. Future 
 - enemies
 - multiple levels
 - a timer or score system
+
+===========================================================================================================
+
+## Phase 2
+
