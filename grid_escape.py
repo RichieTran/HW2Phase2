@@ -9,10 +9,11 @@ The code is organized into beginner-friendly functions so future students
 can extend the game with new mechanics later.
 """
 
+import math
 import random
 
 
-def create_map(width=15, height=9):
+def create_map(width=31, height=21):
     """Create a randomized map with a guaranteed path from P to E.
 
     Uses recursive backtracking to carve a maze, then places
@@ -81,7 +82,7 @@ def create_map(width=15, height=9):
 
 
 
-def place_enemies(game_map, count=1):
+def place_enemies(game_map, count=3):
     """Place a number of enemies (X) on random empty spaces in the map."""
     player_pos = find_player(game_map)
     empty_cells = []
@@ -214,12 +215,28 @@ def find_player(game_map):
 
 
 
+FOG_RADIUS = 4
+
+
 def print_map(game_map, moves=0):
-    """Print the current map state to the terminal."""
+    """Print the current map state with fog of war around the player."""
+    player_pos = find_player(game_map)
     print()
     print(f"Moves: {moves}")
-    for row in game_map:
-        print("".join(row))
+    for row_index, row in enumerate(game_map):
+        line = ""
+        for col_index, cell in enumerate(row):
+            if player_pos:
+                dr = row_index - player_pos[0]
+                dc = col_index - player_pos[1]
+                distance = math.sqrt(dr * dr + dc * dc)
+                if distance <= FOG_RADIUS:
+                    line += cell
+                else:
+                    line += "."
+            else:
+                line += cell
+        print(line)
     print()
 
 

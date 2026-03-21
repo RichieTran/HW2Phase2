@@ -8,3 +8,5 @@ Used Claude Opus:
 4. can you make sure enemy can never spawn right next to player spawn
 
 5. can you add a key "k" that the player can pick up to unlock the door (make the door "U" of locked then back to "E" when the key is picked up), randomly place the k around the map
+
+6. can you add the fog of war, as a circle that has a radius of 4 wide and tall

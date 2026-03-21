@@ -60,10 +60,11 @@ This Phase 1 version is intentionally small so it is easy to grow later. Future 
 
 ### Features
 
-- Randomly generated maze with multiple possible paths.
+- Larger 31x21 randomly generated maze with multiple possible paths.
 - Key (`K`) spawns randomly — pick it up to unlock the door.
 - Locked door (`U`) blocks the exit until the key is collected, then becomes `E`.
-- Enemies (`X`) move each turn — directional arrows (`^`, `v`, `<`, `>`) show where they'll go next.
+- Fog of war — only tiles within a radius of 4 around the player are visible; everything else is hidden (`.`).
+- 3 enemies (`X`) move each turn — directional arrows (`^`, `v`, `<`, `>`) show where they'll go next.
 - Enemies cannot spawn right next to the player.
 - Move counter tracks how many moves you've taken.
 - Win by reaching the unlocked exit (`E`). Lose if an enemy catches you.
@@ -84,7 +85,6 @@ If more time were available, the game could be extended with:
 - **Multiple levels** — after escaping, load a new, harder maze (larger grid, more enemies).
 - **Difficulty scaling** — increase enemy count or speed as levels progress.
 - **Multiple keys / doors** — require the player to collect several keys in order.
-- **Fog of war** — only show tiles near the player so the maze must be explored.
 - **Pathfinding enemies** — smarter enemies that chase the player instead of moving randomly.
 - **Traps** — hidden tiles that teleport the player or slow them down.
 - **Inventory system** — collect and use multiple items (shield, speed boost, etc.).
