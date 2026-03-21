@@ -1,0 +1,10 @@
+Used Claude Opus:
+1. can you randomize the map everytime ensuring atleast one path is always open
+
+2. can you add 2 enemies represented by "X" that move around
+
+3. can you add directional arrows "<", ">", "v", "^" showing where the enemies will move next turn
+
+4. can you make sure enemy can never spawn right next to player spawn
+
+5. can you add a key "k" that the player can pick up to unlock the door (make the door "U" of locked then back to "E" when the key is picked up), randomly place the k around the map

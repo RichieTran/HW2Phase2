@@ -66,7 +66,16 @@ def create_map(width=15, height=9):
 
     # Find the bottom-right-most open cell for the exit.
     exit_row, exit_col = height - 2, width - 2
-    game_map[exit_row][exit_col] = "E"
+    game_map[exit_row][exit_col] = "U"
+
+    # Place the key (K) on a random empty cell.
+    empty_cells = []
+    for r in range(1, height - 1):
+        for c in range(1, width - 1):
+            if game_map[r][c] == " ":
+                empty_cells.append((r, c))
+    key_r, key_c = random.choice(empty_cells)
+    game_map[key_r][key_c] = "K"
 
     return game_map
 
@@ -205,9 +214,10 @@ def find_player(game_map):
 
 
 
-def print_map(game_map):
+def print_map(game_map, moves=0):
     """Print the current map state to the terminal."""
     print()
+    print(f"Moves: {moves}")
     for row in game_map:
         print("".join(row))
     print()
@@ -217,7 +227,7 @@ def print_map(game_map):
 def is_valid_move(game_map, new_row, new_col):
     """Return True if the player can move into the target cell."""
     target_cell = game_map[new_row][new_col]
-    return target_cell != "#"
+    return target_cell not in ("#", "U")
 
 
 
@@ -250,6 +260,7 @@ def move_player(game_map, direction):
         return False
 
     hit_enemy = check_enemy(game_map, new_row, new_col)
+    picked_up_key = game_map[new_row][new_col] == "K"
 
     # Move the player to the new space.
     game_map[current_row][current_col] = " "
@@ -257,6 +268,8 @@ def move_player(game_map, direction):
 
     if hit_enemy:
         return "enemy"
+    if picked_up_key:
+        return "key"
     return "moved"
 
 
@@ -269,7 +282,7 @@ def check_win(game_map):
     That means the exit is no longer visible, which tells us the player won.
     """
     for row in game_map:
-        if "E" in row:
+        if "E" in row or "U" in row:
             return False
     return True
 
@@ -282,12 +295,13 @@ def main():
     planned_moves = plan_enemy_moves(game_map)
 
     print("Welcome to Grid Escape!")
-    print("Reach the exit (E) without walking through walls (#).")
+    print("Find the key (K) to unlock the door (U), then reach the exit (E).")
     print("Watch out for enemies (X)! Arrows (^v<>) show where they'll move next.")
     print("Use w = up, a = left, s = down, d = right.")
+    moves = 0
 
     while True:
-        print_map(game_map)
+        print_map(game_map, moves)
         command = input("Enter your move (w/a/s/d): ").strip().lower()
 
         # Basic input validation helps keep the game beginner-friendly.
@@ -295,24 +309,42 @@ def main():
             print("Invalid command. Please use only w, a, s, or d.")
             continue
 
+        # Check if the player is trying to walk into the locked door.
+        player_pos = find_player(game_map)
+        dir_map = {"w": (-1, 0), "a": (0, -1), "s": (1, 0), "d": (0, 1)}
+        dr, dc = dir_map[command]
+        if game_map[player_pos[0] + dr][player_pos[1] + dc] == "U":
+            print("The door is locked! Find the key (K) first.")
+            continue
+
         result = move_player(game_map, command)
         if not result:
             print("You bumped into a wall. Try a different direction.")
             continue
 
+        moves += 1
+
         if result == "enemy":
-            print_map(game_map)
+            print_map(game_map, moves)
             print("An enemy caught you! Game over!")
             break
 
+        if result == "key":
+            print("You picked up the key! The door is now unlocked.")
+            # Unlock the door: change U to E.
+            for row in game_map:
+                for col_index, cell in enumerate(row):
+                    if cell == "U":
+                        row[col_index] = "E"
+
         if check_win(game_map):
-            print_map(game_map)
-            print("You escaped the grid. You win!")
+            print_map(game_map, moves)
+            print(f"You escaped the grid in {moves} moves. You win!")
             break
 
         # Enemies move after the player each turn.
         if move_enemies(game_map, planned_moves):
-            print_map(game_map)
+            print_map(game_map, moves)
             print("An enemy caught you! Game over!")
             break
 
