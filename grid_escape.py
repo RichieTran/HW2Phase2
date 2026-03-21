@@ -44,6 +44,23 @@ def create_map(width=15, height=9):
 
     carve(1, 1)
 
+    # Remove some extra walls to create alternative paths (loops in the maze).
+    inner_walls = []
+    for r in range(2, height - 2):
+        for c in range(2, width - 2):
+            if game_map[r][c] == "#":
+                # Check if this wall sits between two open passages.
+                if (game_map[r - 1][c] == " " and game_map[r + 1][c] == " " and
+                        game_map[r][c - 1] == "#" and game_map[r][c + 1] == "#"):
+                    inner_walls.append((r, c))
+                elif (game_map[r][c - 1] == " " and game_map[r][c + 1] == " " and
+                      game_map[r - 1][c] == "#" and game_map[r + 1][c] == "#"):
+                    inner_walls.append((r, c))
+    random.shuffle(inner_walls)
+    walls_to_remove = max(1, len(inner_walls) // 4)
+    for r, c in inner_walls[:walls_to_remove]:
+        game_map[r][c] = " "
+
     # Place player top-left, exit bottom-right.
     game_map[1][1] = "P"
 
@@ -55,12 +72,15 @@ def create_map(width=15, height=9):
 
 
 
-def place_enemies(game_map, count=2):
+def place_enemies(game_map, count=1):
     """Place a number of enemies (X) on random empty spaces in the map."""
+    player_pos = find_player(game_map)
     empty_cells = []
     for row_index, row in enumerate(game_map):
         for col_index, cell in enumerate(row):
             if cell == " ":
+                if player_pos and abs(row_index - player_pos[0]) + abs(col_index - player_pos[1]) <= 2:
+                    continue
                 empty_cells.append((row_index, col_index))
     random.shuffle(empty_cells)
     for row_index, col_index in empty_cells[:count]:
