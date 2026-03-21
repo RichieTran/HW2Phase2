@@ -54,22 +54,37 @@ This Phase 1 version is intentionally small so it is easy to grow later. Future 
 - multiple levels
 - a timer or score system
 
-===========================================================================================================
+=======================================================================
 
 ## Phase 2
 
-### Enemies
+### Features
 
-- Enemies are shown with `X` and are placed randomly on empty spaces at the start of the game.
-- Each turn, enemies move to a random adjacent cell (they cannot stay still).
-- Direction arrows (`^`, `v`, `<`, `>`) appear on the map to show where each enemy will move next turn.
-- If the player walks into an enemy, or an enemy moves onto the player, the game is over.
+- Randomly generated maze with multiple possible paths.
+- Key (`K`) spawns randomly — pick it up to unlock the door.
+- Locked door (`U`) blocks the exit until the key is collected, then becomes `E`.
+- Enemies (`X`) move each turn — directional arrows (`^`, `v`, `<`, `>`) show where they'll go next.
+- Enemies cannot spawn right next to the player.
+- Move counter tracks how many moves you've taken.
+- Win by reaching the unlocked exit (`E`). Lose if an enemy catches you.
 
-### New functions added
+### Functions created in Phase 2
 
-- `place_enemies()` — randomly places enemies on empty cells.
+- `place_enemies()` — randomly places enemies on empty cells (not near the player).
 - `find_enemies()` — returns all enemy positions on the map.
 - `move_enemies()` — moves each enemy to its planned or random adjacent cell.
 - `plan_enemy_moves()` — pre-decides each enemy's next move and places directional arrows.
 - `check_enemy()` — checks if a cell contains an enemy.
 - `clear_markers()` — removes direction arrows from the map before enemies move.
+
+### Ideas for future expansion
+
+If more time were available, the game could be extended with:
+
+- **Multiple levels** — after escaping, load a new, harder maze (larger grid, more enemies).
+- **Difficulty scaling** — increase enemy count or speed as levels progress.
+- **Multiple keys / doors** — require the player to collect several keys in order.
+- **Fog of war** — only show tiles near the player so the maze must be explored.
+- **Pathfinding enemies** — smarter enemies that chase the player instead of moving randomly.
+- **Traps** — hidden tiles that teleport the player or slow them down.
+- **Inventory system** — collect and use multiple items (shield, speed boost, etc.).
